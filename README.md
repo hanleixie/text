@@ -1,2 +1,0 @@
-# text-Summaries
-some projects
