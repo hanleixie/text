@@ -33,15 +33,19 @@
 
 * 链接：http://icrc.hitsz.edu.cn/Article/show/139.html
 
-## 三、算法选择和使用
+## 三、算法详解和使用
 
-### 3.1 算法选择
+### 3.1 算法详解
 
-通过观察数据集的摘要可知，摘要不是简单的从对应文本中抽取某一句话，而是对文本的总结，故抽取式的算法不适合本任务。在选择摘要生成式文本算法时，bertsumabs完美胜任此任务。Bertsumabs是以bert为基础构建的生成式文本摘要算法，其包括encoder层（bert）、decoder层（transformer）、generator层（linear）。
+通过观察数据集的摘要可知，摘要不是简单的从对应文本中抽取某一句话，而是对文本的总结，故抽取式的算法不适合本任务。在选择摘要生成式文本算法时，bertsumabs完美胜任此任务。Bertsumabs是以bert为基础构建的生成式文本摘要算法，其包括encoder层（bert）、decoder层（transformer）、generator层（linear）、推理层。
+
+![bertsumabs](bertsumabs.png)
+
+*图为bertsumabs整体架构*
 
 #### encoder层
 
-encoder层由bert模型构成，其输入为input_data（将文本的每个字输入到模型），包含三个向量：（1）input_ids：src （2）token_type_ids：segs （3）attention_mask。，在文本的每句话前面加[CLS]和每句话结束加[SEP]，输出有两种情况：
+encoder层由bert模型构成，其输入为input_data（将文本的每个字输入到模型），包含三个向量：（1）input_ids：src （2）token_type_ids：segs （3）attention_mask。在文本的每句话前面加[CLS]和每句话结束加[SEP]，输出有两种情况：
 
 * 1、`output_layer = model.get_sequence_output()`，获取句子中每一个单词的向量表示，输出shape是[batch.size, seq.length, hidden.size]，这里也包括[CLS]。本次选用的输出方式。
 
@@ -113,10 +117,10 @@ Bert_data文件包含以下部分：
 对处理好的中文语料进行训练，执行如下命令：
 
 ```python
-python train.py -task abs -mode train -bert_data_path BERT_DATA_PATH -dec_dropout 0.2  -model_path MODEL_PATH -sep_optim true -lr_bert 0.002 -lr_dec 0.2 -save_checkpoint_steps NUM -batch_size 140 -train_steps NUMs -report_every 50 -accum_count 5 -use_bert_emb true -use_interval true -warmup_steps_bert 20000 -warmup_steps_dec 10000 -max_pos 512 -visible_gpus -1  -log_file LOG_FILE_PATH
+python train.py
 ```
 
-**参数可在配置文件中修改 .. / one_predict / config.py**
+**模型训练调用 ../train.py ，参数可在配置文件中修改 .. / config.py**
 
 * -task abs：生成式模型
 
@@ -133,10 +137,10 @@ python train.py -task abs -mode train -bert_data_path BERT_DATA_PATH -dec_dropou
 对训练好的模型进行test测试，执行如下命令：
 
 ```python
-python train.py -task abs -mode test -batch_size 3000 -test_batch_size 500 -bert_data_path BERT_DATA_PATH -log_file LOG_FILE_PATH -model_path MODEL_PATH -sep_optim true -use_interval true -visible_gpus 1 -max_pos 512 -max_length 200 -alpha 0.95 -min_length 50 -result_path RESHLT_PATH -test_from TEST_FROM_PATH
+python train.py
 ```
 
-**参数可在配置文件中修改 .. / one_predict / config.py**
+**模型的测试调用 ../train.py ，参数可在配置文件中修改 .. / config.py**
 
 * -test_from：训练模型存放目录，如`model_step_NUM.pt`
 
@@ -156,6 +160,8 @@ predict：'美鼻教父韩国整形泰斗被指非法行医属非法！'
 ```python
 python model_builder_one.py
 ```
+单文本测试调用 ../model_builder_one.py ，参数修改在 ../one_predict / config.py
+
 ## 四、项目架构和服务接口调用
 
 ### 4.1 项目架构
@@ -247,7 +253,7 @@ Language Understanding。
 
 bert采用双向的transformer用于语言模型，它对语境的理解会比向的语言模型更深刻。但bert只使用了transformer的encoder部分，且由多个transformer encoder堆叠组成，其输出维度和输入维度相同。如图所示：
 
-![bert](https://www.lyrn.ai/wp-content/uploads/2018/11/transformer-1024x495.png)
+<img src="https://www.lyrn.ai/wp-content/uploads/2018/11/transformer-1024x495.png" alt="bert"  />
 
 *图片 by Rani Horev*
 
@@ -268,7 +274,7 @@ transformer分成Encoder和Decoder两个部分，Encoder由6个结构一样的en
 
 
 
-
+ 
 
 
 
