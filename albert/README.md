@@ -22,34 +22,34 @@
 
 ## 项目架构
 
-.
-├── callback                                               #损失函数和进程显示
-│   ├── lr_scheduler.py
-│   ├── optimization
-│   │   ├── adamw.py
-│   └── progressbar.py
-├── dataset												#数据
-├── metrics												#评价
-│   ├── compute_metrics.py
-├── model												 #Albert相关模型
-│   ├── configuration_albert.py
-│   ├── configuration_utils.py
-│   ├── file_utils.py
-│   ├── modeling_albert.py
-│   ├── modeling_utils.py
-│   ├── tokenization_albert.py
-│   └── tokenization_utils.py
-├── outputs											 #输出
-├── prev_trained_model						 #预训练模型
-├── processors									   #数据处理
-│   ├── glue.py
-│   └── utils.py
-├── requirements.txt							   #需求模块
-├── run_classifier.py							   #运行函数
-├── scripts											  #运行脚本
-│   └── run_classifier_car.sh
-└── tools												 #基础函数
-    └── common.py
+    .
+    ├── callback                                               #损失函数和进程显示
+    │   ├── lr_scheduler.py
+    │   ├── optimization
+    │   │   ├── adamw.py
+    │   └── progressbar.py
+    ├── dataset												#数据
+    ├── metrics												#评价
+    │   ├── compute_metrics.py
+    ├── model												 #Albert相关模型
+    │   ├── configuration_albert.py
+    │   ├── configuration_utils.py
+    │   ├── file_utils.py
+    │   ├── modeling_albert.py
+    │   ├── modeling_utils.py
+    │   ├── tokenization_albert.py
+    │   └── tokenization_utils.py
+    ├── outputs											 #输出
+    ├── prev_trained_model						 #预训练模型
+    ├── processors									   #数据处理
+    │   ├── glue.py
+    │   └── utils.py
+    ├── requirements.txt							   #需求模块
+    ├── run_classifier.py							   #运行函数
+    ├── scripts											  #运行脚本
+    │   └── run_classifier_car.sh
+    └── tools												 #基础函数
+        └── common.py
 
 ## 调用方式
 
