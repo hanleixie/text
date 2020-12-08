@@ -1,0 +1,22 @@
+CURRENT_DIR=`pwd`
+export BERT_BASE_DIR=$CURRENT_DIR/prev_trained_model/albert_chinese_small
+export DATA_DIR=$CURRENT_DIR/dataset
+export OUTPUR_DIR=$CURRENT_DIR/outputs
+TASK_NAME="car"
+
+python run_classifier.py \
+  --model_type=albert \
+  --model_name_or_path=$BERT_BASE_DIR \
+  --task_name=$TASK_NAME \
+  --do_lower_case \
+  --data_dir=$DATA_DIR/${TASK_NAME}_data/ \
+  --vocab_file=$BERT_BASE_DIR/vocab.txt \
+  --max_seq_length=128 \
+  --per_gpu_train_batch_size=16 \
+  --per_gpu_eval_batch_size=16 \
+  --learning_rate=1e-5 \
+  --num_train_epochs=3.0 \
+  --logging_steps=1000 \
+  --save_steps=1000 \
+  --output_dir=$OUTPUR_DIR/${TASK_NAME}_output/ \
+  --overwrite_output_dir
