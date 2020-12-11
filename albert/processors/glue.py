@@ -1,8 +1,13 @@
-""" GLUE processors and helpers """
-
+# -*- coding:utf-8 -*-
+# @Time: 2020/12/8 19:59
+# @File: glue.py
+# @Software: PyCharm
+# @Author: xiehl
+# -------------------------
 import logging
 import os
 import torch
+from config import *
 from .utils import DataProcessor, InputExample, InputFeatures
 
 logger = logging.getLogger(__name__)
@@ -129,13 +134,7 @@ def convert_examples_to_features(examples, tokenizer,
             attention_mask.append(0)
             token_type_ids.append(0)
 
-        # assert len(input_ids) == max_seq_length
-        # assert len(attention_mask) == max_seq_length
-        # assert len(token_type_ids) == max_seq_length
-        if output_mode == "emotion_classification":
-            label_id = label_map[example.label]
-        else:
-            raise KeyError(output_mode)
+        label_id = label_map[example.label]
 
         features.append(
             InputFeatures(input_ids=input_ids,
@@ -145,26 +144,32 @@ def convert_examples_to_features(examples, tokenizer,
                           input_len=input_len))
     return features
 
-class CarProcessor(DataProcessor):
+class BaseProcessor(DataProcessor):
+
+    def __init__(self, train:str, dev:str, test:str):
+
+        self.train = train
+        self.dev = dev
+        self.test = test
 
     def get_train_examples(self, data_dir):
         """训练"""
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, "train_1.tsv")), "train")
+            self._read_tsv(os.path.join(data_dir, self.train)), "train")
 
     def get_dev_examples(self, data_dir):
         """验证"""
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, "dev_1.tsv")), "dev")
+            self._read_tsv(os.path.join(data_dir, self.dev)), "dev")
 
     def get_test_examples(self, data_dir):
         """测试"""
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, "test_1.tsv")), "test")
+            self._read_tsv(os.path.join(data_dir, self.test)), "test")
 
     def get_labels(self):
         """获取标签"""
-        return ["0", "1"]
+        return [str(i) for i in range(len(tasks_num_labels[args.task_name]))]
 
     def _create_examples(self, lines, set_type):
         """生成样本数据"""
@@ -178,20 +183,13 @@ class CarProcessor(DataProcessor):
                     InputExample(guid=guid, text=text, label=label))
         return examples
 
-tasks_num_labels = {
-
-    'car': 2,
-
-}
+tasks_num_labels = tasks_num_labels
 
 processors = {
 
-    'car': CarProcessor,
+    'car': BaseProcessor(train=processors['car'][0], dev=processors['car'][1], test=processors['car'][-1]),
+    'news': BaseProcessor(train=processors['news'][0], dev=processors['news'][1], test=processors['news'][-1])
 
 }
 
-output_modes = {
-
-    'car': "emotion_classification",
-
-}
+output_modes = output_modes

@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+# @Time: 2020/12/8 20:01
+# @File: common.py
+# @Software: PyCharm
+# @Author: xiehl
+# -------------------------
 import os
 import random
 import torch
