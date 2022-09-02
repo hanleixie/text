@@ -1,0 +1,27 @@
+weights: ./work_dir/prediction/ST_GCN/epoch100_model.pt
+
+# feeder
+feeder: feeder.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/real_data/valid/val_data.npy
+  label_path: ./data/real_data/valid/val_label.pkl
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 1
+  num_class: 17
+  dropout: 0.5
+  edge_importance_weighting: True
+  graph_args:
+    files_list: [ ./data/neo4j/descrip.csv,
+                  ./data/neo4j/reason.csv,
+                  ./data/neo4j/method.csv,
+                  ./data/neo4j/kpi_data.csv ]
+
+# test
+phase: test
+device: 0
+test_batch_size: 64
+
+# python main.py prediction -c ./config/test.yaml

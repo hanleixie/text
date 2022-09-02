@@ -1,0 +1,40 @@
+work_dir: ./work_dir/prediction/ST_GCN
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/real_data/train/train_data.npy
+  label_path: ./data/real_data/train/train_label.pkl
+test_feeder_args:
+  data_path: ./data/real_data/valid/val_data.npy
+  label_path: ./data/real_data/valid/val_label.pkl
+
+# model
+model: net.st_gcn.Model
+model_args:
+  in_channels: 1
+  num_class: 2
+  dropout: 0.5
+  edge_importance_weighting: True
+  graph_args:
+    files_list: [./data/neo4j/descrip.csv,
+                 ./data/neo4j/reason.csv,
+                 ./data/neo4j/method.csv,
+                 ./data/neo4j/kpi_data.csv]
+
+
+#optim
+weight_decay: 0.005
+base_lr: 0.05
+step: [50, 80]
+
+# training
+
+use_gpu: False
+device: [0]
+batch_size: 64
+test_batch_size: 32
+num_epoch: 100
+
+
+# python main.py prediction -c ./config/train.yaml
